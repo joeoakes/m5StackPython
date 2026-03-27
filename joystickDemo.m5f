@@ -1,0 +1,45 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+import unit
+
+setScreenColor(0x000000)
+
+# Initialize joystick (PORT A = default for Grove)
+joystick = unit.get(unit.JOYSTICK, unit.PORTA)
+
+# UI elements
+label_x = M5TextBox(10, 20, "X: 0", lcd.FONT_Default, 0xFFFFFF)
+label_y = M5TextBox(10, 40, "Y: 0", lcd.FONT_Default, 0xFFFFFF)
+label_btn = M5TextBox(10, 60, "BTN: Released", lcd.FONT_Default, 0xFFFFFF)
+
+# Cursor (circle)
+cursor = M5Circle(160, 120, 5, 0x00FF00, 0x00FF00)
+
+# Screen bounds
+screen_w = 320
+screen_h = 240
+
+while True:
+    # Read joystick values
+    x = joystick.X
+    y = joystick.Y
+    btn = joystick.Btn
+
+    # Update labels
+    label_x.setText("X: {}".format(x))
+    label_y.setText("Y: {}".format(y))
+
+    if btn == 0:
+        label_btn.setText("BTN: Pressed")
+    else:
+        label_btn.setText("BTN: Released")
+
+    # Map joystick (0–4095) to screen coordinates
+    screen_x = int((x / 4095) * screen_w)
+    screen_y = int((y / 4095) * screen_h)
+
+    # Move cursor
+    cursor.setPosition(screen_x, screen_y)
+
+    wait_ms(50)
