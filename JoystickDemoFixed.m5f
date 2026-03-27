@@ -1,0 +1,46 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+import time
+import unit
+
+
+setScreenColor(0x000000)
+joystick_0 = unit.get(unit.JOYSTICK, unit.PORTA)
+
+
+
+
+X = None
+Y = None
+i = None
+
+
+
+circle0 = M5Circle(160, 120, 15, 0xFFFFFF, 0xFFFFFF)
+
+from numbers import Number
+
+
+
+
+X = 160
+Y = 120
+while True:
+  circle0.setPosition(x=X)
+  circle0.setPosition(y=Y)
+  if (joystick_0.X) > 160:
+    X = (X if isinstance(X, Number) else 0) + -1
+  if (joystick_0.X) < 80:
+    X = (X if isinstance(X, Number) else 0) + 1
+  if (joystick_0.Y) > 160:
+    Y = (Y if isinstance(Y, Number) else 0) + 1
+  if (joystick_0.Y) < 80:
+    Y = (Y if isinstance(Y, Number) else 0) + -1
+  if (joystick_0.Press) == 1:
+    for i in range(15, 51):
+      lcd.circle(X, Y, i, color=0xFFFFFF)
+      lcd.circle(X, Y, (i - 1), color=0xFFFFFF)
+      wait(0.005)
+    lcd.circle(X, Y, i, color=0xFFFFFF)
+  wait_ms(2)
