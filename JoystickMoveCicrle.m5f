@@ -1,0 +1,95 @@
+from m5stack import *
+from m5ui import *
+from uiflow import *
+import unit
+
+setScreenColor(0x000000)
+
+joystick = unit.get(unit.JOYSTICK, unit.PORTA)
+
+label_x = M5TextBox(10, 10, "X: 0", lcd.FONT_Default, 0xFFFFFF, rotate=0)
+label_y = M5TextBox(10, 30, "Y: 0", lcd.FONT_Default, 0xFFFFFF, rotate=0)
+
+# Start position of the circle
+circle_x = 160
+circle_y = 120
+radius = 10
+
+# Joystick center from your readings
+center_x = 122
+center_y = 125
+
+deadzone = 8
+speed = 3
+
+# Draw first circle
+lcd.circle(circle_x, circle_y, radius, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 1, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 2, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 3, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 4, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 5, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 6, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 7, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 8, color=0x00FF00)
+lcd.circle(circle_x, circle_y, radius - 9, color=0x00FF00)
+
+while True:
+    x = joystick.X
+    y = joystick.Y
+
+    label_x.setText("X: {}".format(x))
+    label_y.setText("Y: {}".format(y))
+
+    old_x = circle_x
+    old_y = circle_y
+
+    # Horizontal movement
+    if x < center_x - deadzone:
+        circle_x = circle_x - speed
+    elif x > center_x + deadzone:
+        circle_x = circle_x + speed
+
+    # Vertical movement
+    if y < center_y - deadzone:
+        circle_y = circle_y - speed
+    elif y > center_y + deadzone:
+        circle_y = circle_y + speed
+
+    # Keep circle on screen
+    if circle_x < radius:
+        circle_x = radius
+    if circle_x > 320 - radius:
+        circle_x = 320 - radius
+    if circle_y < radius:
+        circle_y = radius
+    if circle_y > 240 - radius:
+        circle_y = 240 - radius
+
+    # Only redraw if position changed
+    if old_x != circle_x or old_y != circle_y:
+        # Erase old circle
+        lcd.circle(old_x, old_y, radius, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 1, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 2, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 3, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 4, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 5, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 6, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 7, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 8, color=0x000000)
+        lcd.circle(old_x, old_y, radius - 9, color=0x000000)
+
+        # Draw new circle
+        lcd.circle(circle_x, circle_y, radius, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 1, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 2, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 3, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 4, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 5, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 6, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 7, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 8, color=0x00FF00)
+        lcd.circle(circle_x, circle_y, radius - 9, color=0x00FF00)
+
+    wait_ms(40)
