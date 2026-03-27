@@ -23,6 +23,7 @@ deadzone = 8
 speed = 3
 
 # Draw first circle
+#lcd.fillCircle(circle_x, circle_y, radius, color=0x00FF00)
 lcd.circle(circle_x, circle_y, radius, color=0x00FF00)
 lcd.circle(circle_x, circle_y, radius - 1, color=0x00FF00)
 lcd.circle(circle_x, circle_y, radius - 2, color=0x00FF00)
